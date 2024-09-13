@@ -14,7 +14,6 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.text.NumberFormat;
 import java.util.function.BiFunction;
-
 import javax.swing.AbstractButton;
 import javax.swing.Box;
 import javax.swing.JButton;
@@ -377,6 +376,7 @@ public class concli {
 
 // BUSCAR CLIENTE CONSULTOR E MAIS BUSCAR CLIENTE CONSULTOR E MAIS BUSCAR CLIENTE CONSULTOR E MAIS
 	public void atualizarInformacoes(String id) {
+		String numcons;
 		try {
 			String query = "Select cli_nome,cli_whats from Cliente where cli_id= '"+id+"'";
 			this.resultset = this.statement.executeQuery(query);
@@ -385,35 +385,24 @@ public class concli {
 				String whats =this.resultset.getString("cli_whats");
 				clinome.setText(nome);
 				cliwhats_1.setText(whats);
-			} catch (Exception e) {
-				System.out.println("ERROR: " + e.getMessage());
-				}
 			}
-			
-// BUSCAR CODIGO DO CONSULTOR PELA LIGACAO BUSCAR CODIGO DO CONSULTOR PELA LIGACAO BUSCAR CODIGO DO CONSULTOR PELA LIGACAO
-		try {
 			String query1 = "Select * from ligacao where left(ligacao_id, 4) = '"+id+"' and ligacao_id = '"+id+"'";
 			this.resultset = this.statement.executeQuery(query1);
 			while (this.resultset.next()) {
 				numcons = this.resultset.getString("ligacao_id, 4, 4");
-				numerocom.setText(numcons);
-			} catch (Exception e) {
-				System.out.println("ERROR: " + e.getMessage());
-				}
 			}
-	
-// BUSCAR CONSULTOR PELO CODIGO DA LIGACAO BUSCAR CONSULTOR PELO CODIGO DA LIGACAO
-		try {	
 			String query2 = "Select con_nome from Consultor where con_id= '"+numcons+"'";
 			this.resultset = this.statement.executeQuery(query2);
 			while (this.resultset.next()) {
 				String nomecon1 =this.resultset.getString("con_nome");
-				nomecon.setText(nomecon1);
-			} catch (Exception e) {
+				
+			}
+		}catch (Exception e) {
 				System.out.println("ERROR: " + e.getMessage());
 				}
+				
 			}
-		}
+		
 		
 // EDITAR DADOS EDITAR DADOS EDITAR DADOS EDITAR DADOS EDITAR DADOS EDITAR DADOS
 	public void editarContato(String cli_id,String cli_nome, String cli_whats) {
