@@ -30,8 +30,8 @@ create table Acessorios (
     ace_nome varchar(30) not null
 );
 create table ligacao (
-	ligacao_id bigint(12) not null primary key
-# ligacao_id = con_id + cli_id + vei_id
+		ligacao_id bigint(12) not null primary key
+	# ligacao_id = con_id + cli_id + vei_id
 );
 create table veiace (
 	veiace_id int(8) not null primary key
@@ -69,8 +69,8 @@ insert into Acessorios (ace_id,ace_nome) values
     (2002,'airbags'),
     (3003,'som'),
     (4004,'gps');
-insert into ligacao (ligacao_id) values (111122223333);
-insert into veiace (veiace_id) values (10012002);
+insert into ligacao (ligacao_id) values (111199013333);
+insert into veiace (veiace_id) values (88012002);
 select * from Consultor;
 select * from Cliente;
 select * from Veiculo;
