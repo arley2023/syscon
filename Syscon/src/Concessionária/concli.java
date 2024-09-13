@@ -13,6 +13,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.text.NumberFormat;
+import java.util.function.BiFunction;
+
 import javax.swing.AbstractButton;
 import javax.swing.Box;
 import javax.swing.JButton;
@@ -47,7 +49,7 @@ public class concli {
 	String usuario = "root";
 
 //senha
-	String senha = "arley911";
+	String senha = "Aluno";
 
 //local driver instalado
 	String driver = "com.mysql.cj.jdbc.Driver";
@@ -77,7 +79,8 @@ public class concli {
 
 	private JFormattedTextField cli_cod;
 	private JTextField concod;
-	private JFormattedTextField clicpf;
+	private JTextField nomecon;
+	//private JFormattedTextField clicpf;
 	private JTextArea clinome;
 	private JTextArea clivis;
 	//private JFormattedTextField cliwhats;
@@ -191,6 +194,8 @@ public class concli {
 			}
 		});
 
+		
+		
 // linha CONSULTOR CLIENTE linha CONSULTOR CLIENTE linha CONSULTOR CLIENTE	
 		JLabel labconcli = new JLabel("Consultor");
 		labconcli.setFont(new Font("Tahoma", Font.BOLD, 24));
@@ -202,43 +207,16 @@ public class concli {
 		labconcliform.setBounds(348, 139, 107, 28);
 		frame.getContentPane().add(labconcliform);
 	
-		// JTextArea concod = new JTextArea();
-		concod = new JTextField();
-		concod.setFont(new Font("Tahoma", Font.PLAIN, 18));
-		concod.setBounds(488, 125, 86, 35);
-		frame.getContentPane().add(concod);
-		concod.getDocument().addDocumentListener(new DocumentListener(){
-			@Override
-			public void insertUpdate(DocumentEvent e) {
-			//String id = cli_cod.getText();
-				atualizarInformacoesConsultor(concod.getText());
-				lblNewLabel.setText(concod.getText());
-			}
-			@Override
-			public void removeUpdate(DocumentEvent e) {
-				atualizarInformacoesConsultor(concod.getText());
-				lblNewLabel.setText(concod.getText());
-			}
-			@Override
-			public void changedUpdate(DocumentEvent e) {
-				atualizarInformacoesConsultor(concod.getText());
-				lblNewLabel.setText(concod.getText());
-			}
-		});
+		JTextArea nomecon = new JTextArea();
+		nomecon.setFont(new Font("Tahoma", Font.PLAIN, 18));
+		nomecon.setBounds(488, 125, 453, 35);
+		frame.getContentPane().add(nomecon);
 		
-/*		// CONTORNO BRANCO
-		con_nome = new JFormattedTextField();
-		con_nome.setFont(new Font("Tahoma", Font.PLAIN, 18));
-		con_nome.setBounds(589, 124, 352, 35);
-		frame.getContentPane().add(con_nome);
+		
+		
+//		String query2 = "Select con_nome from Consultor where con_id= '"+idcon+"'";
+	//	String nomecon
 
-		// SOMENTE EXIBIÇÃO DO TEXTO SEM EDIÇÃO
-		JLabel blNewLabel = new JLabel("");
-		// lblNewLabel = new JLabel("");
-		lblNewLabel.setFont(new Font("Tahoma", Font.PLAIN, 18));
-		lblNewLabel.setBounds(589, 85, 282, 28);
-		frame.getContentPane().add(lblNewLabel);
-		*/
 	
 // linha NOME CLIENTE linha NOME CLIENTE linha NOME CLIENTE linha NOME CLIENTE
 		JLabel labnomecli = new JLabel("Nome");
@@ -378,7 +356,7 @@ public class concli {
 	
 	
 	
-	
+/*	
 	
 // BUSCAR CONSULTOR BUSCAR CONSULTOR BUSCAR CONSULTOR BUSCAR CONSULTOR BUSCAR CONSULTOR
 	public void atualizarInformacoesConsultor(String id) {
@@ -395,24 +373,48 @@ public class concli {
 		}
 	}
 
-	
-// BUSCAR BANCO DE DADOS E IMPRIMIR BUSCAR BANCO DE DADOS E IMPRIMIR
+*/	
+
+// BUSCAR CLIENTE CONSULTOR E MAIS BUSCAR CLIENTE CONSULTOR E MAIS BUSCAR CLIENTE CONSULTOR E MAIS
 	public void atualizarInformacoes(String id) {
 		try {
 			String query = "Select cli_nome,cli_whats from Cliente where cli_id= '"+id+"'";
 			this.resultset = this.statement.executeQuery(query);
 			while (this.resultset.next()) {
-			String nome = this.resultset.getString("cli_nome");
-			String whats =this.resultset.getString("cli_whats");
-			clinome.setText(nome);
-			cliwhats_1.setText(whats);
+				String nome = this.resultset.getString("cli_nome");
+				String whats =this.resultset.getString("cli_whats");
+				clinome.setText(nome);
+				cliwhats_1.setText(whats);
+			} catch (Exception e) {
+				System.out.println("ERROR: " + e.getMessage());
+				}
 			}
-		} catch (Exception e) {
-			System.out.println("ERROR: " + e.getMessage());
+			
+// BUSCAR CODIGO DO CONSULTOR PELA LIGACAO BUSCAR CODIGO DO CONSULTOR PELA LIGACAO BUSCAR CODIGO DO CONSULTOR PELA LIGACAO
+		try {
+			String query1 = "Select * from ligacao where left(ligacao_id, 4) = '"+id+"' and ligacao_id = '"+id+"'";
+			this.resultset = this.statement.executeQuery(query1);
+			while (this.resultset.next()) {
+				numcons = this.resultset.getString("ligacao_id, 4, 4");
+				numerocom.setText(numcons);
+			} catch (Exception e) {
+				System.out.println("ERROR: " + e.getMessage());
+				}
+			}
+	
+// BUSCAR CONSULTOR PELO CODIGO DA LIGACAO BUSCAR CONSULTOR PELO CODIGO DA LIGACAO
+		try {	
+			String query2 = "Select con_nome from Consultor where con_id= '"+numcons+"'";
+			this.resultset = this.statement.executeQuery(query2);
+			while (this.resultset.next()) {
+				String nomecon1 =this.resultset.getString("con_nome");
+				nomecon.setText(nomecon1);
+			} catch (Exception e) {
+				System.out.println("ERROR: " + e.getMessage());
+				}
+			}
 		}
-	}
-	
-	
+		
 // EDITAR DADOS EDITAR DADOS EDITAR DADOS EDITAR DADOS EDITAR DADOS EDITAR DADOS
 	public void editarContato(String cli_id,String cli_nome, String cli_whats) {
 		try {
