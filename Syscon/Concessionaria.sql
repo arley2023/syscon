@@ -69,8 +69,8 @@ insert into Acessorios (ace_id,ace_nome) values
     (2002,'airbags'),
     (3003,'som'),
     (4004,'gps');
-insert into ligacao (ligacao_id) values (111199013333);
-insert into veiace (veiace_id) values (88012002);
+insert into ligacao (ligacao_id) values (111199018801),(111199028802),(111199018804);
+insert into veiace (veiace_id) values (88022002),(88012002),(88032002),(88011001),(88021001);
 select * from Consultor;
 select * from Cliente;
 select * from Veiculo;
