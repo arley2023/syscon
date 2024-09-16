@@ -313,33 +313,33 @@ public class conas {
 	    	    
 // parte 2 consultar tabela mysql VEIACE 
 // Consultando o banco de dados "veiace" para obter o "veiace_id" e inserir na ArrayList
-	        String queryVeiAce = "Select veiace_id from veiace";
-	        this.resultset = this.statement.executeQuery(queryVeiAce);
+	    String queryVeiAce = "Select veiace_id from veiace";
+	    this.resultset = this.statement.executeQuery(queryVeiAce);
 	        
 // Percorrendo todos os registros no banco de dados "ligacao"
-	        while (this.resultset.next()) {
-	            // Obtendo a chave "veiace_id"
-	            String veiaceid = this.resultset.getString("veiace_id");
+	    while (this.resultset.next()) {
+        // Obtendo a chave "veiace_id"
+	    	String veiaceid = this.resultset.getString("veiace_id");
 
-	            // Dividindo a chave "veiace_id" em dois grupos de 4 dígitos
-	            String grupo1 = veiaceid.substring(0, 4);  // Primeiro grupo (vei_id)
-	            String grupo2 = veiaceid.substring(4);     // Segundo grupo (ace_id)
+	   // Dividindo a chave "veiace_id" em dois grupos de 4 dígitos
+	    	String grupo1 = veiaceid.substring(0, 4);  // Primeiro grupo (vei_id)
+	    	String grupo2 = veiaceid.substring(4);     // Segundo grupo (ace_id)
 
-	            if (grupo2.equals(id)) {
-	            	String vei_id = grupo1;	            	
+	    	if (grupo2.equals(id)) {
+	    		String vei_id = grupo1;	            	
 
 // Agora consulta o banco de dados "veiculo" usando o vei_id
-	            	String queryvei = "Select vei_nome from veiculo where vei_id = '"+vei_id+"'";
-                    this.resultset = this.statement.executeQuery(queryvei);
+	    		String queryvei = "Select vei_nome from veiculo where vei_id = '"+vei_id+"'";
+	    		this.resultset = this.statement.executeQuery(queryvei);
 
-                    // Se encontrar um veículo correspondente, adiciona o vei_id e vei_nome ao código
-                    if (this.resultset.next()) {
-                        String veiNome = this.resultset.getString("vei_nome");
-                     // Salva na lista código
-                        codigo.add(vei_id + "  " + veiNome); 
-                    }
-	            }
-	        }
+	    		// Se encontrar um veículo correspondente, adiciona o vei_id e vei_nome ao código
+	    		if (this.resultset.next()) {
+	    			String veiNome = this.resultset.getString("vei_nome");
+	    			// Salva na lista código
+	    			codigo.add(vei_id + "  " + veiNome); 
+	    			}
+	    		}
+	    	}
 		}
 
 	
