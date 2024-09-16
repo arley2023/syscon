@@ -2,13 +2,14 @@ package Concessionaria;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.Container;
 import java.awt.EventQueue;
 import java.awt.Font;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
-import java.text.NumberFormat;
 import javax.swing.JButton;
 import javax.swing.JFormattedTextField;
 import javax.swing.JFrame;
@@ -19,8 +20,16 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.text.MaskFormatter;
 import javax.swing.text.NumberFormatter;
+import java.text.NumberFormat;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
+import javax.swing.JComboBox;
 
 public class conas {
+// cria array
+	ArrayList<String> codigo = new ArrayList<>();
+	
 // armazena a conexão
 	private Connection connection = null;
 
@@ -68,8 +77,9 @@ public class conas {
 	private JFrame frame;
 	
 	private JFormattedTextField ascod;
-	private JFormattedTextField asadveicod;
-	private JFormattedTextField asexcveicod;
+	private JFormattedTextField veicod;
+	private JFormattedTextField veiin;
+	private JFormattedTextField veiout;
 	private JTextArea acenome;
 	
 // lança a APLICAÇÃO lança a APLICAÇÃO lança a APLICAÇÃO lança a APLICAÇÃO	
@@ -99,6 +109,7 @@ public class conas {
 
 // inicia a JANELA inicia a JANELA inicia a JANELA inicia a JANELA
 	private void initialize() {
+		conectar();
 		frame = new JFrame();
 		frame.setBounds(100, 100, 1011, 501);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -106,24 +117,23 @@ public class conas {
 
 // MÁSCARAS MÁSCARAS MÁSCARAS MÁSCARAS MÁSCARAS MÁSCARAS MÁSCARAS MÁSCARAS MÁSCARAS
 		NumberFormat numberFormat = NumberFormat.getIntegerInstance();
-		NumberFormatter numberFormatter = new NumberFormatter(numberFormat);
-		numberFormatter.setAllowsInvalid(false);
-		try {
-			MaskFormatter mask = new MaskFormatter("####");
-			ascod = new JFormattedTextField(mask);
-			asadveicod = new JFormattedTextField(mask);
-			asexcveicod = new JFormattedTextField(mask);
+        NumberFormatter numberFormatter = new NumberFormatter(numberFormat);
+        numberFormatter.setAllowsInvalid(false);
+        try {
+		    MaskFormatter mask = new MaskFormatter("####");
+		    ascod = new JFormattedTextField(mask);
+		    veiin = new JFormattedTextField(mask);
+			veiout = new JFormattedTextField(mask);
 		} catch (Exception e) {
 			JOptionPane.showMessageDialog(null, "ERRO na formatação de Campos", "erro", JOptionPane.ERROR_MESSAGE);
-		}
+		}	
 
-// label janela ACESSÓRIOS label janela ACESSÓRIOS label janela ACESSÓRIOS
+// label janela ACESSÓRIOS SYSCON label janela ACESSÓRIOS SYSCON label janela ACESSÓRIOS SYSCON
 		JLabel labcli = new JLabel("Acessórios");
 		labcli.setFont(new Font("Tahoma", Font.BOLD, 50));
 		labcli.setBounds(45, 33, 293, 61);
 		frame.getContentPane().add(labcli);
 
-// label janela SysCon label janela SysCon label janela SysCon
 		JLabel lablogo = new JLabel("SysCon");
 		lablogo.setFont(new Font("Tahoma", Font.BOLD, 50));
 		lablogo.setBounds(758, 33, 183, 61);
@@ -142,7 +152,7 @@ public class conas {
 
 		// JTextArea ascod = new JTextArea();
 		ascod.setFont(new Font("Tahoma", Font.PLAIN, 18));
-		ascod.setBounds(180, 125, 104, 35);
+		ascod.setBounds(180, 125, 141, 35);
 		frame.getContentPane().add(ascod);
 		ascod.getDocument().addDocumentListener(new DocumentListener() {
 			@Override
@@ -178,9 +188,10 @@ public class conas {
 		acenome.setBounds(180, 178, 761, 35);
 		frame.getContentPane().add(acenome);
 		
+	//**************************************************************************
 		
 // linha de VEÍCULOS COM O ACESSÓRIO linha de VEÍCULOS COM O ACESSÓRIO
-		JLabel labveias = new JLabel("Veículos com");
+/*		JLabel labveias = new JLabel("Veículos com");
 		labveias.setFont(new Font("Tahoma", Font.BOLD, 24));
 		labveias.setBounds(44, 223, 183, 35);
 		frame.getContentPane().add(labveias);
@@ -194,7 +205,21 @@ public class conas {
 		asvei.setFont(new Font("Tahoma", Font.PLAIN, 18));
 		asvei.setBounds(228, 234, 713, 35);
 		frame.getContentPane().add(asvei);
-
+	*/	
+		JComboBox veicomace = new JComboBox();
+		veicomace.setFont(new Font("Tahoma", Font.PLAIN, 16));
+		veicomace.setBounds(355, 105, 420, 40);
+		//contentPane.addItem(veicomace);
+		while(true) {
+			for (item = codigo) {
+				veicomace.addItem(item);
+			}
+			
+		}
+		
+		
+		//******************************************************************
+		
 // linha ADICIONAR VEÍCULOS linha ADICIONAR VEÍCULOS linha ADICIONAR VEÍCULOS	
 		JLabel labadveias = new JLabel("Adicionar Veículo");
 		labadveias.setFont(new Font("Tahoma", Font.BOLD, 24));
@@ -206,10 +231,10 @@ public class conas {
 		labadveiasform.setBounds(42, 305, 150, 28);
 		frame.getContentPane().add(labadveiasform);
 
-		//asadveicod = new JTextArea();
-		asadveicod.setFont(new Font("Tahoma", Font.PLAIN, 18));
-		asadveicod.setBounds(260, 291, 150, 35);
-		frame.getContentPane().add(asadveicod);
+		//veiin = new JTextArea();
+		veiin.setFont(new Font("Tahoma", Font.PLAIN, 18));
+		veiin.setBounds(260, 291, 150, 35);
+		frame.getContentPane().add(veiin);
 
 // linha EXCLUIR VEÍCULOS linha ADICIONAR VEÍCULOS linha EXCLUIR VEÍCULOS	
 		JLabel labexcveias = new JLabel("Excluir Veículo");
@@ -222,10 +247,10 @@ public class conas {
 		labexcveiform.setBounds(585, 305, 150, 28);
 		frame.getContentPane().add(labexcveiform);
 
-		// JTextArea asexcveicod = new JTextArea();
-		asexcveicod.setFont(new Font("Tahoma", Font.PLAIN, 18));
-		asexcveicod.setBounds(791, 291, 150, 35);
-		frame.getContentPane().add(asexcveicod);
+		// JTextArea veiout = new JTextArea();
+		veiout.setFont(new Font("Tahoma", Font.PLAIN, 18));
+		veiout.setBounds(791, 291, 150, 35);
+		frame.getContentPane().add(veiout);
 
 // linha BOTÃO SALVAR linha BOTÃO SALVAR linha BOTÃO SALVAR	 linha BOTÃO SALVAR	
 		JButton btnassalvar = new JButton("Salvar");
@@ -269,24 +294,55 @@ public class conas {
 		btnasvoltar.setFont(new Font("Tahoma", Font.BOLD, 36));
 		btnasvoltar.setBounds(718, 367, 223, 53);
 		frame.getContentPane().add(btnasvoltar);
-	}
-					
 		
-
-// BUSCAR BANCO DE DADOS E IMPRIMIR BUSCAR BANCO DE DADOS E IMPRIMIR
+	}	
+// parte 1		
+// 1 - Consultando o banco de dados	ACESSORIOS
 	public void atualizarInformacoes(String id) {
-	try {
-		String query = "Select ace_nome from Acessorios where ace_id= '"+id+"'";
-		this.resultset = this.statement.executeQuery(query);
-		while (this.resultset.next()) {
-			String nome = this.resultset.getString("ace_nome");
-			acenome.setText(nome);
+		codigo.clear();
+	    try {
+	    	String queryAcessorios = "Select ace_nome from acessorios where ace_id = '"+id+"'";
+				this.resultset = this.statement.executeQuery(queryAcessorios);
+				while (this.resultset.next()) {
+					String nome = this.resultset.getString("ace_nome");
+					acenome.setText(nome);
+					}
+			} catch (Exception e) {
+				System.out.println("ERROR: " + e.getMessage());
 			}
-		} catch (Exception e) {
-			System.out.println("ERROR: " + e.getMessage());
-		}
-	}
+	    	    
+// parte 2 consultar tabela mysql VEIACE 
+// Consultando o banco de dados "veiace" para obter o "veiace_id" e inserir na ArrayList
+	        String queryVeiAce = "Select veiace_id from veiace";
+	        this.resultset = this.statement.executeQuery(queryVeiAce);
+	        
+// Percorrendo todos os registros no banco de dados "ligacao"
+	        while (this.resultset.next()) {
+	            // Obtendo a chave "veiace_id"
+	            String veiaceid = this.resultset.getString("veiace_id");
 
+	            // Dividindo a chave "veiace_id" em dois grupos de 4 dígitos
+	            String grupo1 = veiaceid.substring(0, 4);  // Primeiro grupo (vei_id)
+	            String grupo2 = veiaceid.substring(4);     // Segundo grupo (ace_id)
+
+	            if (grupo2.equals(id)) {
+	            	String vei_id = grupo1;	            	
+
+// Agora consulta o banco de dados "veiculo" usando o vei_id
+	            	String queryvei = "Select vei_nome from veiculo where vei_id = '"+vei_id+"'";
+                    this.resultset = this.statement.executeQuery(queryvei);
+
+                    // Se encontrar um veículo correspondente, adiciona o vei_id e vei_nome ao código
+                    if (this.resultset.next()) {
+                        String veiNome = this.resultset.getString("vei_nome");
+                     // Salva na lista código
+                        codigo.add(vei_id + "  " + veiNome); 
+                    }
+	            }
+	        }
+		}
+
+	
 // EDITAR DADOS EDITAR DADOS EDITAR DADOS EDITAR DADOS EDITAR DADOS EDITAR DADOS
 	public void editarContato(String ace_id,String ace_nome) {
 		try {
@@ -333,8 +389,4 @@ public class conas {
 			System.out.println("ERROR: "+e.getMessage());
 		}
 	}
-		
-		
-		
-		
 }
