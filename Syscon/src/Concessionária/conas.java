@@ -10,6 +10,11 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.text.NumberFormat;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JFormattedTextField;
 import javax.swing.JFrame;
@@ -18,13 +23,9 @@ import javax.swing.JOptionPane;
 import javax.swing.JTextArea;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
+import javax.swing.JComboBox;
 import javax.swing.text.MaskFormatter;
 import javax.swing.text.NumberFormatter;
-import java.text.NumberFormat;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Scanner;
-import javax.swing.JComboBox;
 
 public class conas {
 // cria array
@@ -38,7 +39,10 @@ public class conas {
 
 // armazena os resultados
 	private ResultSet resultset = null;
-
+	
+// cria a comboBox	
+	JComboBox comboBox;
+	
 	public void conectar() {
 
 // caminho
@@ -48,7 +52,7 @@ public class conas {
 		String usuario = "root";
 
 // senha
-		String senha = "arley911";
+		String senha = "Aluno";
 
 // local driver instalado
 		String driver = "com.mysql.cj.jdbc.Driver";
@@ -77,7 +81,6 @@ public class conas {
 	private JFrame frame;
 	
 	private JFormattedTextField ascod;
-	private JFormattedTextField veicod;
 	private JFormattedTextField veiin;
 	private JFormattedTextField veiout;
 	private JTextArea acenome;
@@ -121,9 +124,12 @@ public class conas {
         numberFormatter.setAllowsInvalid(false);
         try {
 		    MaskFormatter mask = new MaskFormatter("####");
-		    ascod = new JFormattedTextField(mask);
+		    MaskFormatter mask2 = new MaskFormatter("####");
+		    MaskFormatter mask3 = new MaskFormatter("####");
+		    
+		    ascod = new JFormattedTextField(mask2);
 		    veiin = new JFormattedTextField(mask);
-			veiout = new JFormattedTextField(mask);
+			veiout = new JFormattedTextField(mask3);
 		} catch (Exception e) {
 			JOptionPane.showMessageDialog(null, "ERRO na formatação de Campos", "erro", JOptionPane.ERROR_MESSAGE);
 		}	
@@ -159,16 +165,19 @@ public class conas {
 			public void insertUpdate(DocumentEvent e) {
 				//String id = ascod.getText();
 				atualizarInformacoes(ascod.getText());
+				atualizarInformacoes2(ascod.getText());				
 			}
 
 			@Override
 			public void removeUpdate(DocumentEvent e) {
 				atualizarInformacoes(ascod.getText());
+				atualizarInformacoes2(ascod.getText());
 			}
 
 			@Override
 			public void changedUpdate(DocumentEvent e) {
 				atualizarInformacoes(ascod.getText());
+				atualizarInformacoes2(ascod.getText());
 			}
 		});
 
@@ -188,10 +197,9 @@ public class conas {
 		acenome.setBounds(180, 178, 761, 35);
 		frame.getContentPane().add(acenome);
 		
-	//**************************************************************************
 		
 // linha de VEÍCULOS COM O ACESSÓRIO linha de VEÍCULOS COM O ACESSÓRIO
-/*		JLabel labveias = new JLabel("Veículos com");
+		JLabel labveias = new JLabel("Veículos com");
 		labveias.setFont(new Font("Tahoma", Font.BOLD, 24));
 		labveias.setBounds(44, 223, 183, 35);
 		frame.getContentPane().add(labveias);
@@ -200,25 +208,12 @@ public class conas {
 		labveiasform.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		labveiasform.setBounds(44, 248, 203, 28);
 		frame.getContentPane().add(labveiasform);
-
-		JTextArea asvei = new JTextArea();
-		asvei.setFont(new Font("Tahoma", Font.PLAIN, 18));
-		asvei.setBounds(228, 234, 713, 35);
-		frame.getContentPane().add(asvei);
-	*/	
-		JComboBox veicomace = new JComboBox();
-		veicomace.setFont(new Font("Tahoma", Font.PLAIN, 16));
-		veicomace.setBounds(355, 105, 420, 40);
-		//contentPane.addItem(veicomace);
-		while(true) {
-			for (item = codigo) {
-				veicomace.addItem(item);
-			}
-			
-		}
 		
-		
-		//******************************************************************
+		comboBox = new JComboBox();
+		comboBox.setModel(new DefaultComboBoxModel(new String[] {}));
+		comboBox.setBounds(228, 234, 713, 35);
+		comboBox.setFont(new Font("Tahoma", Font.PLAIN, 18));
+		frame.getContentPane().add(comboBox);
 		
 // linha ADICIONAR VEÍCULOS linha ADICIONAR VEÍCULOS linha ADICIONAR VEÍCULOS	
 		JLabel labadveias = new JLabel("Adicionar Veículo");
@@ -295,11 +290,17 @@ public class conas {
 		btnasvoltar.setBounds(718, 367, 223, 53);
 		frame.getContentPane().add(btnasvoltar);
 		
+		
+		
 	}	
+	
+
+	
+	
 // parte 1		
 // 1 - Consultando o banco de dados	ACESSORIOS
 	public void atualizarInformacoes(String id) {
-		codigo.clear();
+		//codigo.clear();
 	    try {
 	    	String queryAcessorios = "Select ace_nome from acessorios where ace_id = '"+id+"'";
 				this.resultset = this.statement.executeQuery(queryAcessorios);
@@ -310,39 +311,71 @@ public class conas {
 			} catch (Exception e) {
 				System.out.println("ERROR: " + e.getMessage());
 			}
-	    	    
+	}
+	
 // parte 2 consultar tabela mysql VEIACE 
 // Consultando o banco de dados "veiace" para obter o "veiace_id" e inserir na ArrayList
-	    String queryVeiAce = "Select veiace_id from veiace";
+	public void atualizarInformacoes2(String id) {
+		comboBox.removeAllItems();
+		while (this.resultset.next()) {
+			String query1 = "Select veiace_id from veiace whre veiace_id = ?";
+			this.resultset = this.statement.executeQuery(query1);
+			String acess = this.resultset.getString(veiace_id);
+			// Dividindo a chave "veiace_id" em dois grupos de 4 dígitos
+	    	String g1 = acess.substring(0, 4); // Primeiro grupo (vei_id)
+	    	String g2 = acess.substring(4); // Segundo grupo (ace_id)
+	    	if (g2.equals(id)) {
+	    		String vei_id = g1;
+	    		String querynome = "Select vei_nome from veiculo where vei_id = '"+vei_id+"'";
+	    		this.resultset = this.statement.executeQuery(querynome);
+	    		comboBox.addItem(vei_id + "  " + vei_nome)
+	    		}
+	    	}catch (Exception e) {
+				System.out.println("ERROR: " + e.getMessage());
+			}
+		}
+		
+		
+	    		
+	    		
+	    /*
+	    try {
+	    String queryVeiAce = "Select veiace_id from veiace where RIGHT(veiace_id, 4) = '"+id+"'";
 	    this.resultset = this.statement.executeQuery(queryVeiAce);
-	        
-// Percorrendo todos os registros no banco de dados "ligacao"
+	    // Percorrendo todos os registros no banco de dados "ligacao"
 	    while (this.resultset.next()) {
         // Obtendo a chave "veiace_id"
 	    	String veiaceid = this.resultset.getString("veiace_id");
-
+	    	
 	   // Dividindo a chave "veiace_id" em dois grupos de 4 dígitos
 	    	String grupo1 = veiaceid.substring(0, 4);  // Primeiro grupo (vei_id)
 	    	String grupo2 = veiaceid.substring(4);     // Segundo grupo (ace_id)
-
 	    	if (grupo2.equals(id)) {
 	    		String vei_id = grupo1;	            	
-
-// Agora consulta o banco de dados "veiculo" usando o vei_id
-	    		String queryvei = "Select vei_nome from veiculo where vei_id = '"+vei_id+"'";
+	  
+	    		// Agora consulta o banco de dados "veiculo" usando o vei_id
+	    		String queryvei = "Select vei_nome from veiculo where vei_id ='"+vei_id+"'";
+	    		//String queryvei = "Select veiace_id from veiace where RIGHT(veiace_id, 4) = '"+vei_id+"'";
 	    		this.resultset = this.statement.executeQuery(queryvei);
 
 	    		// Se encontrar um veículo correspondente, adiciona o vei_id e vei_nome ao código
+	    		
 	    		if (this.resultset.next()) {
 	    			String veiNome = this.resultset.getString("vei_nome");
 	    			// Salva na lista código
 	    			codigo.add(vei_id + "  " + veiNome); 
+	    			
 	    			}
 	    		}
 	    	}
+	    	for (String item : codigo) {
+	    		comboBox.addItem(item);
+        }
+		}catch(Exception e) {
+			System.out.println("ERROR: " + e.getMessage());
 		}
 
-	
+	}*/
 // EDITAR DADOS EDITAR DADOS EDITAR DADOS EDITAR DADOS EDITAR DADOS EDITAR DADOS
 	public void editarContato(String ace_id,String ace_nome) {
 		try {
