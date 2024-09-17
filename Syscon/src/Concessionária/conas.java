@@ -325,7 +325,10 @@ public class conas {
 				System.out.println(veiaceid);
 				System.out.println(grupo1);
 				System.out.println(grupo2);
+				
+				
 				if (grupo2.equals(id)) {
+					System.out.println("1aaaa");
 					String vei_id = grupo1;
 					String querya = "Select vei_nome from veiculo where vei_id ='" + vei_id + "'";
 					this.resultset = this.statement.executeQuery(querya);
@@ -333,13 +336,15 @@ public class conas {
 						String veiNome = this.resultset.getString("vei_nome");
 						System.out.println("2");
 						comboBox.addItem(vei_id + "  " + veiNome);
+						System.out.println(vei_id + "  " + veiNome);
 						}
+					//resultset.close();
 					}						
 				}
 			}catch (Exception g) {
 				System.out.println("ERROR: " + g.getMessage());
-				}
 			}
+		}
 			
 
 	/*
