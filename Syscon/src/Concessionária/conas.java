@@ -9,6 +9,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Statement;
 import java.text.NumberFormat;
 import java.util.ArrayList;
@@ -39,6 +40,11 @@ public class conas {
 
 // armazena os resultados
 	private ResultSet resultset = null;
+	// armazena as consultas
+	private Statement statement2 = null;
+
+	// armazena os resultados
+	private ResultSet resultset2 = null;
 
 // cria a comboBox	
 	JComboBox comboBox;
@@ -52,7 +58,7 @@ public class conas {
 		String usuario = "root";
 
 // senha
-		String senha = "arley911";
+		String senha = "Aluno";
 
 // local driver instalado
 		String driver = "com.mysql.cj.jdbc.Driver";
@@ -64,6 +70,7 @@ public class conas {
 
 // consultas
 			this.statement = this.connection.createStatement();
+			this.statement2 = this.connection.createStatement();
 		} catch (Exception e) {
 			System.out.println("ERROR: " + e.getMessage());
 		}
@@ -124,12 +131,11 @@ public class conas {
 		numberFormatter.setAllowsInvalid(false);
 		try {
 			MaskFormatter mask = new MaskFormatter("####");
+			ascod = new JFormattedTextField(mask);
+			MaskFormatter mask1 = new MaskFormatter("####");
+			veiin = new JFormattedTextField(mask1);
 			MaskFormatter mask2 = new MaskFormatter("####");
-			MaskFormatter mask3 = new MaskFormatter("####");
-
-			ascod = new JFormattedTextField(mask2);
-			veiin = new JFormattedTextField(mask);
-			veiout = new JFormattedTextField(mask3);
+			veiout = new JFormattedTextField(mask2);
 		} catch (Exception e) {
 			JOptionPane.showMessageDialog(null, "ERRO na formatação de Campos", "erro", JOptionPane.ERROR_MESSAGE);
 		}
@@ -165,19 +171,19 @@ public class conas {
 			public void insertUpdate(DocumentEvent e) {
 				// String id = ascod.getText();
 				atualizarInformacoes(ascod.getText());
-				//atualizarInformacoes2(ascod.getText());
+				atualizarInformacoes2(ascod.getText());
 			}
 
 			@Override
 			public void removeUpdate(DocumentEvent e) {
 				atualizarInformacoes(ascod.getText());
-				//atualizarInformacoes2(ascod.getText());
+				atualizarInformacoes2(ascod.getText());
 			}
 
 			@Override
 			public void changedUpdate(DocumentEvent e) {
 				atualizarInformacoes(ascod.getText());
-				//atualizarInformacoes2(ascod.getText());
+				atualizarInformacoes2(ascod.getText());
 			}
 		});
 
@@ -214,6 +220,15 @@ public class conas {
 		comboBox.setBounds(228, 234, 713, 35);
 		comboBox.setFont(new Font("Tahoma", Font.PLAIN, 18));
 		frame.getContentPane().add(comboBox);
+		comboBox.setSelectedItem("Veículos que tem o Acessório");
+		
+		
+		
+		
+		//##### baixo baixo baixo baixo baixo baixo baixo baixo baixo baixo baixo baixo
+		
+		
+		
 
 // linha ADICIONAR VEÍCULOS linha ADICIONAR VEÍCULOS linha ADICIONAR VEÍCULOS	
 		JLabel labadveias = new JLabel("Adicionar Veículo");
@@ -230,7 +245,7 @@ public class conas {
 		veiin.setFont(new Font("Tahoma", Font.PLAIN, 18));
 		veiin.setBounds(260, 291, 150, 35);
 		frame.getContentPane().add(veiin);
-
+		
 // linha EXCLUIR VEÍCULOS linha ADICIONAR VEÍCULOS linha EXCLUIR VEÍCULOS	
 		JLabel labexcveias = new JLabel("Excluir Veículo");
 		labexcveias.setFont(new Font("Tahoma", Font.BOLD, 24));
@@ -247,23 +262,6 @@ public class conas {
 		veiout.setBounds(791, 291, 150, 35);
 		frame.getContentPane().add(veiout);
 
-// linha BOTÃO SALVAR linha BOTÃO SALVAR linha BOTÃO SALVAR	 linha BOTÃO SALVAR	
-		JButton btnassalvar = new JButton("Salvar");
-		btnassalvar.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				String id = ascod.getText();
-				String nome = acenome.getText();
-				if (verificarContato(id)) {
-					editarContato(id, nome);
-				} else {
-					inserirContato(id, nome);
-				}
-			}
-		});
-		btnassalvar.setFont(new Font("Tahoma", Font.BOLD, 36));
-		btnassalvar.setBounds(45, 367, 223, 53);
-		frame.getContentPane().add(btnassalvar);
-
 // linha BOTÃO EXCLUIR linha BOTÃO EXCLUIR linha BOTÃO EXCLUIR linha BOTÃO EXCLUIR
 		JButton btnasexcluir = new JButton("Excluir");
 		btnasexcluir.addActionListener(new ActionListener() {
@@ -271,6 +269,9 @@ public class conas {
 				String id = ascod.getText();
 				apagarContato(id);
 				acenome.setText("");
+
+				atualizarInformacoes2(ascod.getText());
+
 			}
 		});
 		btnasexcluir.setFont(new Font("Tahoma", Font.BOLD, 36));
@@ -289,12 +290,80 @@ public class conas {
 		btnasvoltar.setFont(new Font("Tahoma", Font.BOLD, 36));
 		btnasvoltar.setBounds(718, 367, 223, 53);
 		frame.getContentPane().add(btnasvoltar);
+	
 
+// linha BOTÃO SALVAR linha BOTÃO SALVAR linha BOTÃO SALVAR	 linha BOTÃO SALVAR	
+		JButton btnassalvar = new JButton("Salvar");
+		btnassalvar.setFont(new Font("Tahoma", Font.BOLD, 36));
+		btnassalvar.setBounds(45, 367, 223, 53);
+		frame.getContentPane().add(btnassalvar);
+		btnassalvar.addActionListener(new ActionListener());
+		botaosalvar(ascod.getText());
+		
+}
+	
+// AÇÕES BOTÃO SALVAR AÇÕES BOTÃO SALVAR AÇÕES BOTÃO SALVAR AÇÕES BOTÃO SALVAR AÇÕES BOTÃO SALVAR	
+		public void botaosalvar(String veiin, String veiout, String ace_id, String vei_id) {
+			// Passo 0 - Conferir se 'veiace_id' existe
+			if (ascod.getText() != null && ascod.getText() != 0) {
+				String queryx1 = "Select ace_id from acessorios where ace_id = "+ascod+"";
+				if (this.resultset.next()) {
+					break;
+				}else {
+					public void actionPerformed(ActionEvent e) {
+					conini tel = new conini();
+					tel.visivel();
+					frame.dispose();
+					}
+				}
+						
+			// Passo 1 - Conferir se 'veiin' tem algum valor e se é diferente de 0 ou null
+			if (veiin.getText() != null && veiin.getText() != 0) {
+		    	break;
+		    }else {
+		    	String queryVeiin = "Select vei_id from veiculo where vei_id = "+veiin+"";
+		    	this.resultset = this.statement.executeQuery(queryVeiin);
+		    	if (this.resultset.next()) {
+		    		int chave1 = Integer.parseInt(vei_id+ace_id);
+		    		String queryacevei = "Select veiace_id from veiace where veiace_id = "+chave1+"";
+		    		this.resultset2 = this.statement.executeQuery(queryacevei);
+		    		if (this.resultset2.next()) {
+		    			break;
+		    		}else {
+		    			String query = "insert into veiace (veiace_id) values('" +chave1+ "')";
+		    			this.statement.executeUpdate(query);
+		    		}
+		    	}
+		    }
+		    
+		    // passo 2 - Conferir se 'veiout' tem algum valor e se é diferente de 0 ou null
+		    if (veiout.getText() != null && veiout.getText() != 0) {
+		    	break;
+		    }else {
+		    	String queryVeiout = "Select vei_id from veiculo where vei_id = "+veiout+"";
+		    	this.resultset = this.statement.executeQuery(queryVeiout);
+		    	if (this.resultset.next()) {
+		    		int chave2 = Integer.parseInt(vei_id+ace_id);
+		    		String queryacevei1 = "Select veiace_id from veiace where veiace_id = "+chave2+"";
+		    		this.resultset = this.statement.executeQuery(queryacevei1);
+		    		if (this.resultset2.next()) {
+		    			String querya = "delete into veiace (veiace_id) values('" +chave2+ "')";
+		    			this.statement.executeUpdate(querya);
+		    		}
+		    	}
+		    }				
+		}		
+		String queryaceal = "update acessorio set ace_nome = '"+ace_nome+"' where ace_id = '"+ace_id+"'";
+		this.statement.executeUpdate(queryaceal);
 	}
 
+	
+	
+	
 // parte 1		
 // 1 - Consultando o banco de dados	ACESSORIOS
 	public void atualizarInformacoes(String id) {
+		// codigo.clear();
 		try {
 			String queryAcessorios = "Select ace_nome from acessorios where ace_id = '" + id + "'";
 			this.resultset = this.statement.executeQuery(queryAcessorios);
@@ -305,116 +374,49 @@ public class conas {
 		} catch (Exception e) {
 			System.out.println("ERROR: " + e.getMessage());
 		}
-		comboBox.removeAllItems();
-		comboBox.setSelectedItem("Veículos com o Acessório");
-		atualizarInformacoes2(ascod.getText());
-		}
-	
+	}
 
 // parte 2 consultar tabela mysql VEIACE 
 // Consultando o banco de dados "veiace" para obter o "veiace_id" e inserir na ArrayList
 	public void atualizarInformacoes2(String id) {
 		try {
-			String query = "select veiace_id from veiace";
-			this.resultset = this.statement.executeQuery(query);
-			System.out.println("a");
+			comboBox.removeAllItems();
+			String queryVeiAce = "Select veiace_id from veiace where RIGHT(veiace_id, 4) = '" + id + "'";
+			this.resultset = this.statement.executeQuery(queryVeiAce);
+			// Percorrendo todos os registros no banco de dados "ligacao"
 			while (this.resultset.next()) {
+				// Obtendo a chave "veiace_id"
 				String veiaceid = this.resultset.getString("veiace_id");
+
+				// Dividindo a chave "veiace_id" em dois grupos de 4 dígitos
 				String grupo1 = veiaceid.substring(0, 4); // Primeiro grupo (vei_id)
 				String grupo2 = veiaceid.substring(4); // Segundo grupo (ace_id)
-				System.out.println(veiaceid);
-				System.out.println(grupo1);
-				System.out.println(grupo2);
-				
-				
-				if (grupo2.equals(id)) {
-					System.out.println("1aaaa");
-					String vei_id = grupo1;
-					String querya = "Select vei_nome from veiculo where vei_id ='" + vei_id + "'";
-					this.resultset = this.statement.executeQuery(querya);
-					if (this.resultset.next()) {
-						String veiNome = this.resultset.getString("vei_nome");
-						System.out.println("2");
-						comboBox.addItem(vei_id + "  " + veiNome);
-						System.out.println(vei_id + "  " + veiNome);
-						}
-					//resultset.close();
-					}						
+
+				String vei_id = grupo1;
+				String queryvei = "Select vei_nome from veiculo where vei_id ='" + vei_id + "'";
+				// String queryvei = "Select veiace_id from veiace where RIGHT(veiace_id, 4) =
+				// '"+vei_id+"'";
+
+				this.resultset2 = this.statement2.executeQuery(queryvei);
+
+				// Se encontrar um veículo correspondente, adiciona o vei_id e vei_nome ao
+				// código
+
+				while (this.resultset2.next()) {
+					String veiNome = this.resultset2.getString("vei_nome");
+					// Salva na lista código
+					// codigo.add(vei_id + " " + veiNome);
+					comboBox.addItem(vei_id + "  " + veiNome);
 				}
-			}catch (Exception g) {
-				System.out.println("ERROR: " + g.getMessage());
+
 			}
+
+		} catch (Exception e) {
+			System.out.println("ERROR: " + e.getMessage());
 		}
-			
+	}
 
-	/*
-	 * String queryVeiAce =
-	 * "Select veiace_id from veiace where RIGHT(veiace_id, 4) = '"+id+"'";
-	 * System.out.println("1"); this.resultset =
-	 * this.statement.executeQuery(queryVeiAce); System.out.println("2"); while
-	 * (this.resultset.next()) { System.out.println("3"); String veiaceid =
-	 * this.resultset.getString("veiace_id"); // acertar essa variavel
-	 * System.out.println("veiaceid: " + veiaceid); System.out.println("4"); String
-	 * grupo1 = veiaceid.substring(0, 4); // Primeiro grupo (vei_id) String grupo2 =
-	 * veiaceid.substring(4); // Segundo grupo (ace_id) System.out.println("5"); if
-	 * (grupo2.equals(id)) { String vei_id = grupo1; String queryvei =
-	 * "Select vei_nome from veiculo where vei_id ='"+vei_id+"'"; this.resultset =
-	 * this.statement.executeQuery(queryvei); if (this.resultset.next()) { String
-	 * veiNome = this.resultset.getString("vei_nome"); comboBox.addItem(vei_id +
-	 * "  " + veiNome); } }
-	 * 
-	 * }catch (Exception f) { System.out.println("ERROR: " + f.getMessage()); } } }
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
-	 * /* comboBox.removeAllItems(); while (this.resultset.next()) { String query1 =
-	 * "Select veiace_id from veiace whre veiace_id = ?"; this.resultset =
-	 * this.statement.executeQuery(query1); String acess =
-	 * this.resultset.getString(veiace_id); // Dividindo a chave "veiace_id" em dois
-	 * grupos de 4 dígitos String g1 = acess.substring(0, 4); // Primeiro grupo
-	 * (vei_id) String g2 = acess.substring(4); // Segundo grupo (ace_id) if
-	 * (g2.equals(id)) { String vei_id = g1; String querynome =
-	 * "Select vei_nome from veiculo where vei_id = '"+vei_id+"'"; this.resultset =
-	 * this.statement.executeQuery(querynome); comboBox.addItem(vei_id + "  " +
-	 * vei_nome) } }catch (Exception e) { System.out.println("ERROR: " +
-	 * e.getMessage()); } }
-	 * 
-	 */
 
-	/*
-	 * try { String queryVeiAce =
-	 * "Select veiace_id from veiace where RIGHT(veiace_id, 4) = '"+id+"'";
-	 * this.resultset = this.statement.executeQuery(queryVeiAce); // Percorrendo
-	 * todos os registros no banco de dados "ligacao" while (this.resultset.next())
-	 * { // Obtendo a chave "veiace_id" String veiaceid =
-	 * this.resultset.getString("veiace_id");
-	 * 
-	 * // Dividindo a chave "veiace_id" em dois grupos de 4 dígitos String grupo1 =
-	 * veiaceid.substring(0, 4); // Primeiro grupo (vei_id) String grupo2 =
-	 * veiaceid.substring(4); // Segundo grupo (ace_id) if (grupo2.equals(id)) {
-	 * String vei_id = grupo1;
-	 * 
-	 * // Agora consulta o banco de dados "veiculo" usando o vei_id String queryvei
-	 * = "Select vei_nome from veiculo where vei_id ='"+vei_id+"'"; //String
-	 * queryvei =
-	 * "Select veiace_id from veiace where RIGHT(veiace_id, 4) = '"+vei_id+"'";
-	 * this.resultset = this.statement.executeQuery(queryvei);
-	 * 
-	 * // Se encontrar um veículo correspondente, adiciona o vei_id e vei_nome ao
-	 * código
-	 * 
-	 * if (this.resultset.next()) { String veiNome =
-	 * this.resultset.getString("vei_nome"); // Salva na lista código
-	 * codigo.add(vei_id + "  " + veiNome);
-	 * 
-	 * } } } for (String item : codigo) { comboBox.addItem(item); } }catch(Exception
-	 * e) { System.out.println("ERROR: " + e.getMessage()); }
-	 * 
-	 * }
-	 * 
-	 */
 
 // EDITAR DADOS EDITAR DADOS EDITAR DADOS EDITAR DADOS EDITAR DADOS EDITAR DADOS
 	public void editarContato(String ace_id, String ace_nome) {
