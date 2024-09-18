@@ -1,52 +1,16 @@
 package Concessionaria;
 
-import java.awt.Color;
-import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.EventQueue;
 import java.awt.Font;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.text.NumberFormat;
-import javax.swing.AbstractButton;
-import javax.swing.Box;
 import javax.swing.JButton;
-import javax.swing.JFormattedTextField;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JTextArea;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
-import javax.swing.text.MaskFormatter;
-import javax.swing.text.NumberFormatter;
-import javax.swing.JTextPane;
 
 public class conini {
 
 	private JFrame frame;
-/* // conecta BCO DADOS conecta BCO DADOS conecta BCO DADOS conecta BCO DADOS
-	private Connection connection = null;
-	private Statement statement = null;
-	//private ResultSet resultset = null;
-	public void conectar() {
-		String servidor="jdbc:mysql://localhost:3306/cadastro";
-		String usuario = "root";
-		String senha = "arley911";
-		String driver = "com.mysql.cj.jdbc.Driver";
-		try {
-			Class.forName(driver);
-			this.connection = DriverManager.getConnection(servidor,usuario,senha);
-			this.statement = this.connection.createStatement();
-		}catch(Exception e) {
-			System.out.println("ERROR: "+e.getMessage());
-		}
-	}*/
 
 // lança a APLICAÇÃO lança a APLICAÇÃO lança a APLICAÇÃO lança a APLICAÇÃO	
 	public static void main(String[] args) {
