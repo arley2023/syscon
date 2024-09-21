@@ -30,11 +30,11 @@ create table Acessorios (
     ace_nome varchar(30) not null
 );
 create table ligacao (
-		ligacao_id bigint(12) not null primary key
-	# ligacao_id = con_id + cli_id + vei_id
+	ligacao_id bigint(12) unique not null primary key
+# ligacao_id = con_id + cli_id + vei_id
 );
 create table veiace (
-	veiace_id int(8) not null primary key
+	veiace_id int(8) not null primary key unique
 # veiace_id = vei_id + ace_id
 );
 insert into Consultor (con_id,con_nome) values 
