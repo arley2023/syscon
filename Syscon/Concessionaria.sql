@@ -29,9 +29,16 @@ create table Acessorios (
 	ace_id int(4) unique not null primary key,
     ace_nome varchar(30) not null
 );
-create table ligacao (
-	ligacao_id bigint(12) unique not null primary key
-# ligacao_id = con_id + cli_id + vei_id
+create table concli (
+	concli_id int(8) unique not null primary key
+# ligacao_id = con_id + cli_id
+);create table convei (
+	convei_id int(8) unique not null primary key
+# ligacao_id = con_id + cli_id
+);
+create table clivei (
+	clivei_id int(8) unique not null primary key
+# ligacao_id = cli_id + vei_id
 );
 create table veiace (
 	veiace_id int(8) not null primary key unique
@@ -69,11 +76,14 @@ insert into Acessorios (ace_id,ace_nome) values
     (2002,'airbags'),
     (3003,'som'),
     (4004,'gps');
-insert into ligacao (ligacao_id) values (111199018801),(111199028802),(111199018804);
+insert into concli (concli_id) values (11119901),(11119902),(11119903);
+insert into convei (convei_id) values (11118801),(11118802),(11118804);
+insert into clivei (clivei_id) values (99018801),(99028802),(99018804),(99038804);
 insert into veiace (veiace_id) values (88022002),(88012002),(88032002),(88011001),(88021001);
 select * from Consultor;
 select * from Cliente;
 select * from Veiculo;
 select * from Acessorios;
-select * from ligacao;
+select * from concli;
+select * from clivei;
 select * from veiace;
