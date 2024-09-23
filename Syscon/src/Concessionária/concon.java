@@ -24,7 +24,9 @@ import javax.swing.text.MaskFormatter;
 import javax.swing.text.NumberFormatter;
 
 public class concon {
-// armazena a conexão
+private static final String Try = null;
+
+	// armazena a conexão
 	private Connection connection = null;
 
 // armazena as consultas
@@ -39,6 +41,7 @@ public class concon {
 	private ResultSet resultset1 = null;
 	private ResultSet resultset2 = null;
 	private ResultSet resultset3 = null;
+	private ResultSet resultset4 = null;
 
 // cria a comboBox	
 	JComboBox comboBoxcli;
@@ -92,13 +95,17 @@ public class concon {
 	private JFormattedTextField conexcli;
 	private JFormattedTextField conadvei;
 	private JFormattedTextField conexvei;
-	private JFormattedTextField chaveligacaomask;
+	private JFormattedTextField campolig;
+	private JFormattedTextField campolig1;
 	private JTextArea connome;
+	private JTextArea clinome;
+	private JTextArea veinome;
 	private JTextField concod2;
-	private JTextField adcli2;
-	private JTextField excli2;
-	private JTextField advei2;
-	private JTextField exvei2;
+	private JTextField clicod2;
+	private JTextField conadcli2;
+	private JTextField conexcli2;
+	private JTextField conadvei2;
+	private JTextField conexvei2;
 
 // lança a APLICAÇÃO lança a APLICAÇÃO lança a APLICAÇÃO lança a APLICAÇÃO	
 	public static void main(String[] args) {
@@ -149,11 +156,11 @@ public class concon {
 		    conadvei = new JFormattedTextField(mask3);
 		    MaskFormatter mask4 = new MaskFormatter("####");
 		    conexvei = new JFormattedTextField(mask4);
-		    MaskFormatter mask5 = new MaskFormatter("############");
-		    chaveligacaomask = new JFormattedTextField(mask5);
-		} catch (Exception e) {
+		    MaskFormatter mask5 = new MaskFormatter("########");
+		    campolig = new JFormattedTextField(mask5);
+		 } catch (Exception e) {
 			JOptionPane.showMessageDialog(null, "ERRO na formatação de Campos", "erro", JOptionPane.ERROR_MESSAGE);
-		}
+		 }
 
 // label janela CONSULTOR SYSCON label janela CONSULTOR SYSCON label janela CONSULTOR SYSCON
 		JLabel labcli = new JLabel("Consultor");
@@ -187,18 +194,21 @@ public class concon {
 				// String id = concod.getText();
 				atualizarInformacoes(concod.getText());
 				atualizarInformacoes2(concod.getText());
+				atualizarInformacoes3(concod.getText());
 			}
 
 			@Override
 			public void removeUpdate(DocumentEvent e) {
 				atualizarInformacoes(concod.getText());
 				atualizarInformacoes2(concod.getText());
+				atualizarInformacoes3(concod.getText());
 			}
 
 			@Override
 			public void changedUpdate(DocumentEvent e) {
 				atualizarInformacoes(concod.getText());
 				atualizarInformacoes2(concod.getText());
+				atualizarInformacoes3(concod.getText());
 			}
 		});
 
@@ -329,11 +339,11 @@ public class concon {
 			public void actionPerformed(ActionEvent e) {
 				String concod2 = concod.getText();
 				String connome2 = connome.getText();
-				String adcli2 = conadcli.getText();
-				String excli2 = conexcli.getText();
-				String advei2 = conadvei.getText();
-				String exvei2 = conexvei.getText();
-				btnsalvar(concod2, connome2, adcli2, excli2, advei2, exvei2);
+				String conadcli2 = conadcli.getText();
+				String conexcli2 = conexcli.getText();
+				String conadvei2 = conadvei.getText();
+				String conexvei2 = conexvei.getText();
+				btnsalvar(concod2, connome2, conadcli2, conexcli2, conadvei2, conexvei2);
 				concon tel = new concon();
 				tel.visivel();
 				frame.dispose();
@@ -348,8 +358,10 @@ public class concon {
 		btnasexcluir.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				String concod2 = concod.getText();
-				apagarConsultor(concod2);
-				connome.setText("");
+				btnexcluir(concod2);
+				concon tel = new concon();
+				tel.visivel();
+				frame.dispose();
 			}
 		});
 		
@@ -381,93 +393,130 @@ public class concon {
 		}
 	}
 	
-// buscar clientes e veiculos buscar clientes e veiculos buscar clientes e veiculos buscar clientes e veiculos
-	public void atualizarInformacoes2(String concod2) {
+// buscar clientes buscar clientes buscar clientes buscar clientes buscar clientes buscar clientes buscar clientes
+	public void atualizarInformacoes2(String id) {
 		try {
-			comboBoxvei.removeAllItems();
+			
+			// limpando comboBox
 			comboBoxcli.removeAllItems();
-			String queryconclivei = "Select ligacao_id from ligacao where left(ligacao_id, 4)= '"+concod2+"'";
-			this.resultset = this.statement.executeQuery(queryconclivei);
-			// Percorrendo todos os registros no banco de dados "ligacao"
-			while (this.resultset.next()) {
-				// Obtendo a chave "veiace_id"
-				String conclivei = this.resultset.getString("ligacao_id");
+			System.out.println("1");
+			
+			// buscando lista de clientes
+			String queryconcli = "Select concli_id from concli where left(concli_id, 4)= '"+id+"'";
+			this.resultset1 = this.statement1.executeQuery(queryconcli);
+			// Percorrendo todos os registros no banco de dados "concli"
+			System.out.println("2");
+			while (this.resultset1.next()) {
 				
-				// Dividindo a chave "veiace_id" em dois grupos de 4 dígitos
-				String grupo1 = conclivei.substring(0, 4); // Primeiro grupo (con_id)
-				String grupo2 = conclivei.substring(4, 8); // Segundo grupo (cli_id)
-				String grupo3 = conclivei.substring(8, 12); // Terceiro grupo (vei_id)
-
+				// Obtendo a chave "concli_id"
+				String conclichave = this.resultset1.getString("concli_id");
+				
+				// Dividindo a chave "vconcli_id" em dois grupos de 4 dígitos
+				System.out.println("3");
+				String grupo1 = conclichave.substring(0, 4); // Primeiro grupo (con_id)
+				String grupo2 = conclichave.substring(4, 8); // Segundo grupo (cli_id)
+				
 				// buscando cliente atendido
 				String cli_id = grupo2;
-				System.out.println("buscando nome cliente");
-				String querycli = "Select cli_nome from Cliente where cli_id ='" + cli_id + "'";
-				this.resultset1 = this.statement1.executeQuery(querycli);
-				while (this.resultset1.next()) {
-					String cliNome1 = this.resultset1.getString("cli_nome");
-					comboBoxcli.addItem(cli_id + "  " + cliNome1);
-				}
-				
-				// buscando veiculo visitado
-				String vei_id = grupo3;
-				System.out.println("buscando veiculo");
-				String queryvei = "Select vei_nome from Veiculo where vei_id ='" + vei_id + "'";
-				this.resultset2 = this.statement2.executeQuery(queryvei);
+				System.out.println("4");
+				String querycli = "Select cli_nome, cli_whats from Cliente where cli_id ='" + cli_id + "'";
+				this.resultset2 = this.statement2.executeQuery(querycli);
+				System.out.println("5");
+
+				// buscar no cliente
 				while (this.resultset2.next()) {
-					String veiNome1 = this.resultset2.getString("cli_nome");
-					comboBoxvei.addItem(vei_id + "  " + veiNome1);
+					String cliwhats = this.resultset2.getString("cli_whats");
+					String clinome = this.resultset2.getString("cli_nome");
+					System.out.println("6");
+					comboBoxcli.addItem(cli_id + "  " + cliwhats + "  " + clinome);
+					String clicod2 = cli_id;
+					}		
+				}
+			}catch(Exception e) {
+				System.out.println("ERROR: "+e.getMessage());
+				}
+		}
+			
+// buscar veiculos buscar veiculos buscar veiculos buscar veiculos buscar veiculos buscar veiculos buscar veiculos
+	public void atualizarInformacoes3(String id) {
+		try {
+			
+			// limpando comboBox
+			comboBoxvei.removeAllItems();
+			System.out.println("1a");
+			
+			// buscando lista de clientes
+			String queryconvei = "Select convei_id from convei where left(convei_id, 4)= '"+id+"'";
+			this.resultset3 = this.statement3.executeQuery(queryconvei);
+			// Percorrendo todos os registros no banco de dados "concli"
+			System.out.println("2a");
+			while (this.resultset3.next()) {
+				
+				// Obtendo a chave "concli_id"
+				String conveichave = this.resultset3.getString("convei_id");
+				
+				// Dividindo a chave "vconcli_id" em dois grupos de 4 dígitos
+				System.out.println("3a");
+				String grupo1a = conveichave.substring(0, 4); // Primeiro grupo (con_id)
+				String grupo2a = conveichave.substring(4, 8); // Segundo grupo (vei_id)
+				
+				// buscando cliente atendido
+				String vei_id = grupo2a;
+				System.out.println("4a");
+				String querycli = "Select vei_nome from Veiculo where vei_id ='" + vei_id + "'";
+				this.resultset4 = this.statement4.executeQuery(querycli);
+				System.out.println("5a");
+					// buscar no cliente
+				while (this.resultset4.next()) {
+					String veinome = this.resultset4.getString("vei_nome");
+					System.out.println("6");
+					comboBoxvei.addItem(vei_id + "  " + veinome);
+					}		
+				}
+			}catch(Exception e) {
+				System.out.println("ERROR: "+e.getMessage());
 				}
 			}
-		} catch (Exception e) {
-				System.out.println("ERROR: " + e.getMessage());
-		}
-	}
 	
 // ações do botão salvar ações do botão salvar ações do botão salvar ações do botão salvar
-	public void btnsalvar(String concod2, String connome2, String adcli2, String excli2, String advei2, String exvei2) {
-		try {			
-			String queryconsultorsalvar = "update Consultor set con_nome ='"+connome2+"' where con_id = '"+concod2+"'";
-			this.resultset3 = this.statement3.executeQuery(queryconsultorsalvar);
-			if (resultset3.next()) {
-				String queryupconnome = "update Consultor set con_nome = '"+connome2+"' where ace_id = '"+concod2+"'";
+	public void btnsalvar(String concod2, String connome2, String conadcli2, String conexcli2, String conadvei2, String conexvei2) {
+		try {
+			String queyrexistecon = "Select con_nome from Consultor where con_id = '" + concod2 + "'";
+			this.resultset = this.statement.executeQuery(queyrexistecon);
+			if (resultset.next()) {
+				String queryupconnome = "update Consultor set con_nome = '"+connome2+"' where con_id = '"+concod2+"'";
 				this.statement.executeUpdate(queryupconnome);
 			}else {	
 				String queryinsertconnome = "insert into Consultor(con_id,con_nome) values ('"+concod2+"','"+connome2+"')";
-				this.statement2.executeUpdate(queryinsertconnome);
+				this.statement1.executeUpdate(queryinsertconnome);
 			}
-			
-			// Dividindo a chave "veiace_id" em três grupos de 4 dígitos
-			String conchave = this.resultset.getString("con_id");
-			String grupo1 = conchave.substring(0, 4); // Primeiro grupo (con_id)
-			String grupo2 = conchave.substring(4, 8); // Segundo grupo (cli_id)
-			String grupo3 = conchave.substring(8, 12); // Terceiro grupo (vei_id)
 			
 			// Adicionar e excluir cliente
-			if(adcli2.isEmpty()==false&&adcli2.isEmpty()==false) {
-				chaveligacaomask.setText (concod2 + adcli2 + "0000");
-				int cliincluir = Integer.parseUnsignedInt(chaveligacaomask);
-				String queryincluircli = "insert into ligacao (ligacao_id) values ('"+cliincluir+"')";
-				this.statement1.executeUpdate(queryincluircli);
+			if(conadcli2.isEmpty()==false&&conadcli2.isEmpty()==false) {
+				campolig.setText (concod2 + conadcli2);
+				//int cliincluir = Integer.parseUnsignedInt(campolig);
+				String queryincluircli = "insert into concli (concli_id) values ('"+campolig+"')";
+				this.statement2.executeUpdate(queryincluircli);
 			}
-			if(excli2.isEmpty()==false&&excli2.isEmpty()==false) {
-				chaveligacaomask.setText (concod2 + excli2 + "0000");
-				int cliexcluir = Integer.parseUnsignedInt(chaveligacaomask);
-				String queryupexcluirvei = "delete from ligacao where ligacao_id = '"+cliexcluir+"'";
-				this.statement3.executeUpdate(queryupexcluirvei);
+			if(conexcli2.isEmpty()==false&&conexcli2.isEmpty()==false) {
+				campolig1.setText (concod2 + conexcli2);
+				//int cliexcluir = Integer.parseUnsignedInt(campolig);
+				String queryupexcluircli = "delete from concli where concli_id = '"+campolig1+"'";
+				this.statement3.executeUpdate(queryupexcluircli);
 			}
 						
 			// Adicionar e excluir veículo
-			if(advei2.isEmpty()==false&&advei2.isEmpty()==false) {
-				chaveligacaomask.setText (concod2 + "0000" + advei2);
-				int veiincluir = Integer.parseUnsignedInt(chaveligacaomask);
-				String queryincluirvei = "insert into ligacao (ligacao_id) values ('"+veiincluir+"')";
-				this.statement2.executeUpdate(queryincluirvei);
+			if(conadvei2.isEmpty()==false&&conadvei2.isEmpty()==false) {
+				campolig.setText (concod2 + conadvei2);
+				//int veiincluir = Integer.parseUnsignedInt(campolig);
+				String queryincluirvei = "insert into convei (convei_id) values ('"+campolig+"')";
+				this.statement4.executeUpdate(queryincluirvei);
 			}
-			if(exvei2.isEmpty()==false&&exvei2.isEmpty()==false) {
-				chaveligacaomask.setText (concod2 + "0000" + exvei2);
-				int veiexcluir = Integer.parseUnsignedInt(chaveligacaomask);
-				String queryupexcluirvei = "delete from ligacao where ligacao_id = '"+veiexcluir+"'";
-				this.statement4.executeUpdate(queryupexcluirvei);
+			if(conexvei2.isEmpty()==false&&conexvei2.isEmpty()==false) {
+				campolig1.setText (concod2 + conexvei2);
+				//int veiexcluir = Integer.parseUnsignedInt(campolig);
+				String queryupexcluirvei = "delete from convei where convei_id = '"+campolig1+"'";
+				this.statement3.executeUpdate(queryupexcluirvei);
 			}
 		}catch(Exception e) {
 			System.out.println("ERROR: "+e.getMessage());
@@ -475,16 +524,22 @@ public class concon {
 		}
 			
 // ações botão excluir ações botão excluir ações botão excluir ações botão excluir ações botão excluir
-	public void apagarConsultor(String concod2) {
+	public void btnexcluir(String concod2) {
 		try { 
-		String query = "delete from Consultor where con_id ='"+concod2+"'";
-			this.statement.executeUpdate(query);	
+		String queryconsultor = "delete from Consultor where con_id ='"+concod2+"'";
+			this.statement.executeUpdate(queryconsultor);	
 		}catch(Exception e) {
 			System.out.println("ERROR: "+e.getMessage());
 		}
 		try { 
-			String queryligexcluirconsultor = "delete from ligacao where left(ligacao_id, 4) = '" + concod2 + "'";
-			this.statement3.executeUpdate(queryligexcluirconsultor);	
+			String queryconvei = "delete from convei where left(convei_id, 4) = '" + concod2 + "'";
+			this.statement3.executeUpdate(queryconvei);	
+		}catch(Exception e) {
+			System.out.println("ERROR: "+e.getMessage());
+		}
+		try { 
+			String queryconcli = "delete from concli where left(concli_id, 4) = '" + concod2 + "'";
+			this.statement2.executeUpdate(queryconcli);	
 		}catch(Exception e) {
 			System.out.println("ERROR: "+e.getMessage());
 		}
