@@ -34,7 +34,7 @@ create table concli (
 # ligacao_id = con_id + cli_id
 );create table convei (
 	convei_id int(8) unique not null primary key
-# ligacao_id = con_id + cli_id
+# ligacao_id = con_id + vei_id
 );
 create table clivei (
 	clivei_id int(8) unique not null primary key
@@ -82,6 +82,7 @@ insert into clivei (clivei_id) values (99018801),(99028802),(99018804),(99038804
 insert into veiace (veiace_id) values (88022002),(88012002),(88032002),(88011001),(88021001);
 select * from Consultor;
 select * from Cliente;
+select * from convei;
 select * from Veiculo;
 select * from Acessorios;
 select * from concli;
